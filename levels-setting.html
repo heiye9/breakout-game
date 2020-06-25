@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>关卡编辑</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /*.wrap {*/
+    /*  display: flex;*/
+    /*  */
+    /*}*/
+
+    .map-item {
+      width: 506px;
+      height: 300px;
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      margin: 20px auto;
+      border-radius: 4px;
+    }
+
+    .block {
+      width: 70px;
+      height: 30px;
+      margin: 2px 0 0 2px;
+      background: transparent;
+      border: 1px solid #333;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .block.enabled {
+      background: green;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .add-level, .reset-level {
+      width: 506px;
+      height: 100px;
+      background: #3a75e9;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+      color: #fff;
+      font-size: 30px;
+      cursor: pointer;
+      transition: all 200ms;
+    }
+
+    .reset-level {
+      background: darkred;
+    }
+
+    .add-level:hover, .reset-level:hover {
+      transform: scale(1.01);
+      transition: all 200ms;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <div class="reset-level" @click="resetLevels">
+    恢复默认
+  </div>
+
+  <div v-for="(map, k) in levels" class="wrap">
+
+    <h3 align="center">
+      第{{ k+1 }}关
+      <button @click="removeLevel(k)">删除</button>
+    </h3>
+    <div class="map-item">
+      <div class="row" v-for="(item, i) in map">
+        <div class="block" :class="{ enabled: item1 === 1 }" v-for="(item1, j) in item"
+             @click="clickBlock(k, i, j)"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="add-level" @click="addLevel">
+    添加关卡
+  </div>
+
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script>
+
+<script>
+  const defaultLevels = [[[1, 0, 1, 1, 1, 0, 1], [0, 1, 0, 1, 0, 1, 0], [0, 0, 1, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0, 1]], [[0, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 0, 1, 0, 1, 1]]]
+
+  if (!localStorage.levels) {
+    // 默认关卡
+    localStorage.levels = JSON.stringify(defaultLevels)
+  }
+
+  new Vue({
+    el: '#app',
+    data: {
+      levels: null,
+    },
+    created() {
+      this.levels = JSON.parse(localStorage.levels)
+    },
+    methods: {
+      clickBlock(k, i, j) {
+        if (this.levels[k][i][j] === 1) {
+          Vue.set(this.levels[k][i], j, 0)
+        } else {
+          Vue.set(this.levels[k][i], j, 1)
+        }
+        localStorage.levels = JSON.stringify(this.levels)
+      },
+      addLevel() {
+        this.levels.push([
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+        ])
+        localStorage.levels = JSON.stringify(this.levels)
+      },
+      removeLevel(index) {
+        this.levels.splice(index, 1)
+      },
+      resetLevels() {
+        this.levels = JSON.parse(JSON.stringify(defaultLevels))
+        localStorage.levels = JSON.stringify(this.levels)
+      },
+    },
+  })
+
+</script>
+</body>
+</html>

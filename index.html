@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>打砖块</title>
+  <style>
+    #canvas {
+      /*border: 1px solid black;*/
+      margin: 20px auto;
+      display: block;
+    }
+
+    .wrap {
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+      margin: 100px auto 0;
+    }
+
+    .button {
+      width: 500px;
+      height: 40px;
+      background: #3a75e9;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 200ms;
+      align-self: flex-start;
+      text-decoration: none;
+    }
+
+    .button:hover {
+      transform: scale(1.01);
+      transition: all 200ms;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <span>帧率调节</span>
+    <input type="range" name="points" min="30" max="75" value="60" step="1"/>
+    <span id="fps-show">60</span>
+  </div>
+  <canvas id="canvas" width="500" height="300"></canvas>
+  <a class="button" href="./levels-setting.html">编辑关卡</a>
+</div>
+<script>
+  const defaultLevels = [[[1, 0, 1, 1, 1, 0, 1], [0, 1, 0, 1, 0, 1, 0], [0, 0, 1, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0, 1]], [[0, 1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], [1, 1, 0, 1, 0, 1, 1]]]
+
+  if (!localStorage.levels) {
+    // 默认关卡
+    localStorage.levels = JSON.stringify(defaultLevels)
+  }
+
+  window.log = console.log.bind(console)
+
+  window.global = {
+    config: {
+      fps: 60,
+    },
+    scene: {},
+    element: {},
+    util: {},
+  }
+  document.querySelector('input[type=range]').addEventListener('input', function () {
+    document.querySelector('#fps-show').innerHTML = this.value
+    window.global.config.fps = this.value * 1
+    EventBus.trigger(EventType.CHANGE_FPS)
+  })
+</script>
+
+<!-- 工具 -->
+<script src="js/util/util.js"></script>
+
+
+<!-- 游戏元素 -->
+<script src="js/element/base.js"></script>
+<script src="js/element/paddle.js"></script>
+<script src="js/element/ball.js"></script>
+<script src="js/element/block.js"></script>
+
+<!-- 场景 -->
+<script src="js/scene/base.js"></script>
+<script src="js/scene/welcome.js"></script>
+<script src="js/scene/gaming.js"></script>
+<script src="js/scene/gameover.js"></script>
+
+
+<script src="./js/game.js"></script>
+<script src="./js/index.js"></script>
+</body>
+</html>
