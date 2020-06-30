@@ -1,4 +1,4 @@
-[Play](https://heiye9.github.io/breakout-game/)
+[点此处预览](https://heiye9.github.io/breakout-game/)
 
 基于 Canvas 的打砖块游戏，运用到面向对象思想，对游戏元素和游戏场景进行抽象。运用事件发布/订阅完成场景切换。
 
